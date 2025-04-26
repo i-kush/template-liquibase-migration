@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: local_test_db
+    environment:
+      POSTGRES_DB: local_test_db
+      POSTGRES_USER: local
+      POSTGRES_PASSWORD: local
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - "local_test_network"
+
+networks:
+  local_test_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
