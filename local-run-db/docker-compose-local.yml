@@ -1,13 +1,13 @@
 services:
   postgres:
-    image: postgres:latest
+    image: postgres:17.5
     container_name: local_test_db
     environment:
       POSTGRES_DB: local_test_db
       POSTGRES_USER: local
       POSTGRES_PASSWORD: local
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - template_liquibase_migration_volume:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
@@ -18,5 +18,5 @@ networks:
     driver: bridge
 
 volumes:
-  postgres_data:
+  template_liquibase_migration_volume:
     driver: local

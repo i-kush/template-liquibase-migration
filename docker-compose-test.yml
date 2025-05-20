@@ -1,0 +1,29 @@
+services:
+  test_postgres:
+    image: postgres:17.5
+    environment:
+      POSTGRES_DB: test_db
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+    ports:
+      - "5432:5432"
+    tmpfs:
+      - /var/lib/postgresql/data  # in-memory only, always fresh
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "test" ]
+      interval: 2s
+      retries: 10
+
+  liquibase:
+    image: liquibase/liquibase:4.31.0
+    depends_on:
+      test_postgres:
+        condition: service_healthy
+    volumes:
+      - ./changelog:/liquibase/changelog
+    command:
+      - /bin/sh
+      - -c
+      - |
+        liquibase --changelog-file=./changelog/changelog.xml --url=jdbc:postgresql://test_postgres:5432/test_db --username=test --password=test update && \
+        liquibase --changelog-file=./changelog/changelog.xml --url=jdbc:postgresql://test_postgres:5432/test_db --username=test --password=test rollback-count --count=100000

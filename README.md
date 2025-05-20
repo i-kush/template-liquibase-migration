@@ -25,3 +25,8 @@ Liquibase migration template as a separate service with separate release process
     - `rollback --tag=anyTagNameForExampleReleaseTag` - rollbacks all changesets until meets change with the following tag
     - `rollbak-count --count=1` - rollbacks specified in `count` param amount of changesets
 - `NETWORK` - docker network to use if needed, could be empty (mandatory for the local run)
+
+### Environment variables ###
+Run isolated tests `docker-compose -f docker-compose-test.yml up --exit-code-from liquibase --no-attach test_postgres --remove-orphans` and verify exit code.
+
+Could be applied on CI/CD - verifies both `rollback` and `update` operations.
